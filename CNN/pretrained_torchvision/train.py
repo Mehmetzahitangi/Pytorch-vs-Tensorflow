@@ -31,7 +31,7 @@ if __name__ == "__main__":
         torchvision.transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)) # (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
     ])
 
-    train_data = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/CNN/resnet18/Rock-Paper-Scissors/train"
+    train_data = "./resnet18/Rock-Paper-Scissors/train"
     trainset = torchvision.datasets.ImageFolder(train_data,transform=data_transforms)
     train_loader = torch.utils.data.DataLoader(dataset = trainset, batch_size = 2,shuffle = True)
 
