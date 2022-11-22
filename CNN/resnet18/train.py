@@ -10,7 +10,7 @@ if __name__ == "__main__":
     num_epochs = 80
     num_classes = 3
     lr = 1e-4
-    train_data = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/CNN/resnet18/Rock-Paper-Scissors/train"
+    train_data = "./resnet18/Rock-Paper-Scissors/train"
 
     model = ResNet18(num_classes= num_classes)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -52,5 +52,5 @@ if __name__ == "__main__":
             loop.set_description(f"Epoch: [{epoch+1}/{num_epochs}]")
             loop.set_postfix(batch_loss = loss.item(), mean_loss=mean_loss, lr = optimizer.param_groups[0]["lr"])
 
-        torch.save(model.state_dict(), "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/CNN/resnet18/checkpoints/model_rock_paper.pth")
+        torch.save(model.state_dict(), "./resnet18/checkpoints/model_rock_paper.pth")
         scheduler.step(mean_loss) # update learning rate
