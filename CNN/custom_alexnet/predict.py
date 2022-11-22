@@ -25,7 +25,7 @@ def predict_binary(model,img):
 if __name__ == "__main__":
     num_classes = 2
     input_size = (256,256)
-    test_data_path = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/custom_alexnet/data/Test/"
+    test_data_path = "./data/Test/"
 
     transform = torchvision.transforms.Compose([torchvision.transforms.Resize(size = (256,256)),
                                                 torchvision.transforms.ToTensor(),
