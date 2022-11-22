@@ -38,9 +38,9 @@ def predict_binary(model,img):
 if __name__ == "__main__":
     num_classes = 3
     input_size = (256,256)
-    test_images_path = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/CNN/resnet18/Rock-Paper-Scissors/test/scissors/"
+    test_images_path = "./resnet18/Rock-Paper-Scissors/test/scissors/"
     model_path = "resnet18/checkpoints/model_rock_paper.pth"
-    #test_data_path = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/custom_alexnet/data/Test/"
+    #test_data_path = "./custom_alexnet/data/Test/"
 
     transform = torchvision.transforms.Compose([torchvision.transforms.Resize(size = (input_size)),
                                                 torchvision.transforms.ToTensor(),
