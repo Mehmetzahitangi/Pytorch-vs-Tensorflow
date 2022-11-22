@@ -31,8 +31,8 @@ def predict_multiclass(model,img):
 if __name__ == "__main__":
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    test_data_path = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/CNN/resnet18/Rock-Paper-Scissors/test/paper/" #./data/test/"
-    model_path = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/CNN/model_multiclass.pth" #"./model.pth"
+    test_data_path = "./resnet18/Rock-Paper-Scissors/test/paper/" #./data/test/"
+    model_path = "./CNN/model_multiclass.pth" #"./model.pth"
 
     model = get_model(feature_extract=False,pretrained=True,num_classes=3).to(device)
     model.load_state_dict(torch.load(model_path))
