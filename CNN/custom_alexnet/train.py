@@ -14,7 +14,7 @@ if __name__ == "__main__":
     device = torch.device('cuda:0' if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    dataset = CustomDataset(data_path = "F:/yedek/00 AI-ML HER ŞEY/Pytorch vs Tensorflow/custom_alexnet/data/Train/")
+    dataset = CustomDataset(data_path = "./data/Train/")
     train_loader = torch.utils.data.DataLoader(dataset, batch_size = batch_size, shuffle = True) # DataLoader needs _getitem_ and _len_
     # DataLoader ==> If there are __getitem__ and __len__ then DataLoader can take the image
 
