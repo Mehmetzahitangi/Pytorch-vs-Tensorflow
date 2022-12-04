@@ -1,0 +1,73 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from tqdm import tqdm
+
+from utils.dataset import CustomDataset
+from models.original_unet import UNet  # original version
+from models.custom_unet import UNet_Custom  # stable version
+from config import Config
+import sys
+
+
+
+def train(epochs, trainLoader, num_classes, criterion):
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=1, factor=0.1, verbose=True)
+
+    mean_losses = []
+    print("[INFO] Training is started.")
+    for epoch in range(epochs):
+        running_loss = []
+        loop = tqdm(enumerate(trainLoader), total=len(trainLoader))
+
+        for idx, (image, mask) in loop:
+            image, mask = image.to(device), mask.to(device)
+            outputs = model(image)
+
+            loss = criterion(outputs, mask)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            running_loss.append(loss.item())
+            mean_loss = sum(running_loss) / len(running_loss)
+
+            loop.set_description(f"Epoch: [{epoch + 1}/{epochs}]")
+            loop.set_postfix(batch_loss=loss.item(), mean_loss=mean_loss, lr=optimizer.param_groups[0]["lr"])
+
+        if len(mean_losses) >= 1:
+            if mean_loss < min(mean_losses):
+                print("[INFO] Model saved.")
+                torch.save(model.state_dict(), "model.pth")
+
+        mean_losses.append(mean_loss)
+        scheduler.step(mean_loss)
+
+
+if __name__ == "__main__":
+
+    print("System Path: ", sys.path)
+    cfg = Config()
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    train_dataset = CustomDataset(cfg.images_path, cfg.mask_paths, input_size=cfg.input_size)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=cfg.batch_size, shuffle=True, num_workers=8)
+
+    if cfg.model_type == "stable_version":
+        model = UNet_Custom(num_classes=cfg.num_classes) #in_channels=1, out_channels=64, n_class=cfg.num_classes, kernel_size=3, padding=1, stride=1)  # stable version
+        criterion = nn.NLLLoss()
+    elif cfg.model_type == "standard_version":
+        model = UNet()#num_classes=cfg.num_classes)  # unstable version
+        criterion = nn.NLLLoss()
+    model = model.to(device)
+
+    # if cfg.model_type == "stable" > 2:
+    #     criterion = nn.NLLLoss()
+    # else:
+    #     criterion = nn.BCEWithLogitsLoss()
+
+    optimizer = optim.Adam(model.parameters(), lr=cfg.lr)
+    train(epochs=cfg.num_epochs, trainLoader=train_loader, num_classes=cfg.num_classes, criterion=criterion)
+    print("[INFO] Training is ended.")
